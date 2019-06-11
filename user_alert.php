@@ -1,10 +1,10 @@
 <?php
 /**
  * 
- * @package karen-plugin
+ * @package user_alert
  */
 /*
-Plugin Name: Karen Plugin
+Plugin Name: User Alert Plugin
 Plugin URI: http://karen-plugin.com
 Description: This is my first attempt on writing a custom plugin
 Version: 1.0.0
