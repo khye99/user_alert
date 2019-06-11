@@ -151,7 +151,7 @@ add_action( 'wp_ajax_washuFormidableRemotePost', 'washuFormidableRemotePost' );
 function formIdCheck() {
 
  	$formIDsArray = explode( ",", str_replace( ' ', '', get_site_option( 'form_ids' ) ) );
-	wp_localize_script( 'my_amazing_script', 'formIDsArray', $formIDsArray );
+	wp_localize_script( 'user_script', 'formIDsArray', $formIDsArray );
 	
 }
 add_action( 'wp_enqueue_scripts', 'formIdCheck' );
