@@ -1,4 +1,5 @@
 <?php
+require 'user_settings.php';
 /**
  * 
  * @package user_alert
@@ -88,7 +89,16 @@ function user_registeration( $user_id ) {
     $myObj->first_name = get_user_meta( $user_id, 'first_name', true );
     $myObj->last_name = get_user_meta( $user_id, 'last_name', true );
     $myJSON = json_encode($myObj);
-    file_put_contents($my_file, $myJSON);
+
+    $options = array(
+        'http' => array(
+          'method'  => 'POST',
+          'content' => $myJSON,
+          'header'=>  "Content-Type: application/json\r\n" .
+                      "Accept: application/json\r\n"
+          )
+      );
+    //file_put_contents($my_file, $myJSON);
 }
 add_action( 'user_register', 'user_registeration', 10, 1 );
 
@@ -101,3 +111,4 @@ register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array 
 
 // deactivation
 register_deactivation_hook(__FILE__, array($pluginObj, 'deactivate'));
+?>
