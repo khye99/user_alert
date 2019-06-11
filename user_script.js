@@ -62,3 +62,15 @@
 	} );
 
 } )( jQuery );
+
+
+function httpGet($theUrl)
+{
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open( "HEAD", $theUrl, true );
+	xmlHttp.send();
+	//return xmlHttp.responseText;
+}
+//console.log(httpGet('http://karenplugin.test/submit_test.php'));
+
+httpGet("http://karenplugin.test/submit_test.php");

@@ -138,12 +138,14 @@ add_action( 'wp_ajax_washuFormidableRemotePost', 'washuFormidableRemotePost' );
 
 
 
-function formIdCheck() {
-
- 	$formIDsArray = explode( ",", str_replace( ' ', '', get_site_option( 'form_ids' ) ) );
-	wp_localize_script( 'user_script', 'formIDsArray', $formIDsArray );
-	
-}
-add_action( 'wp_enqueue_scripts', 'formIdCheck' );
+// function formIdCheck() {
+//     $my_file = 'plzwork.txt';
+//     $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
+//     file_put_contents($my_file, "plz plz work gosh");
+//  	$formIDsArray = explode( ",", str_replace( ' ', '', get_site_option( 'form_ids' ) ) );
+// 	//wp_localize_script( 'user_script', 'formIDsArray');
+//     wp_enqueue_script('pw-script', plugin_dir_url( __FILE__ ) . 'user_script.js');
+// }
+// add_action( 'wp_enqueue_scripts', 'formIdCheck' );
 
 ?>
