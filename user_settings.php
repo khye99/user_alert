@@ -1,6 +1,6 @@
 <?php
-
 function wustl_formidable_remote_post_json( $request_data = array() ) {
+
 	// Bail if request is not an array or is empty.
 	if ( ! is_array( $request_data ) || empty( $request_data ) ) {
 		return;
@@ -30,12 +30,21 @@ function wustl_formidable_remote_post_json( $request_data = array() ) {
 			'content-type' => 'application/json'
 		)
 	);
+    // $my_file = 'plzwork.txt';
+    // $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
+    // file_put_contents($my_file, $photo_signup_service_url);
+
+    // $path = dirname( __FILE__ ) . "/form.txt";
+    // $myfile = fopen( $path, "w" ) or die( "Unable to open file!" );
+    // $json = file_get_contents( $returnData );
+    // $obj = json_decode( $json );
+    // fwrite( $myfile, print_r( $obj, true ) );
+    // fclose( $myfile );
 
 	// Send the POST request using the HTTP API.
-	wp_remote_post( $photo_signup_service_url, $post_args );
+    wp_remote_post( $photo_signup_service_url, $post_args ); 
+    // WP custom function with given destination URL and the array filled with the content we want to pass
 }
-
-
 
 
 

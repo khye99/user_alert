@@ -75,30 +75,27 @@ add_action('admin_notices', 'general_admin_notice');
 
 function user_registeration( $user_id ) {
     $my_file = 'exportedfile.txt';
-    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); //implicitly creates file
+    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); //implicitly creates fil
 
-
+    $user_info = []; 
 
     $user = new WP_User($user_id); // getting user from database by #ID
-    $myObj->email_address = $user->user_email; 
-    $myObj->nickname = $user->user_nicename;
-    $myObj->dispalyName = $user->display_name;
-
-
-
-    $myObj->first_name = get_user_meta( $user_id, 'first_name', true );
-    $myObj->last_name = get_user_meta( $user_id, 'last_name', true );
-    $myJSON = json_encode($myObj);
-
-    $options = array(
-        'http' => array(
-          'method'  => 'POST',
-          'content' => $myJSON,
-          'header'=>  "Content-Type: application/json\r\n" .
-                      "Accept: application/json\r\n"
-          )
-      );
+    // $myObj->email_address = $user->user_email; 
+    // $myObj->nickname = $user->user_nicename;
+    // $myObj->dispalyName = $user->display_name;
+    // $myObj->first_name = get_user_meta( $user_id, 'first_name', true );
+    // $myObj->last_name = get_user_meta( $user_id, 'last_name', true );
+    // $myJSON = json_encode($myObj);
     //file_put_contents($my_file, $myJSON);
+
+    $email_address = $user->user_email;
+    $user_name = $user->user_nicename;
+    $full_name = $user->display_name;
+    $first_name = get_user_meta( $user_id, 'first_name', true );
+    $last_name = get_user_meta( $user_id, 'last_name', true );
+    array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name);
+
+    wustl_formidable_remote_post_json( $user_info);
 }
 add_action( 'user_register', 'user_registeration', 10, 1 );
 
