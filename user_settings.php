@@ -56,12 +56,10 @@ function photo_cp_signup_admin_form() {
 		$service_url = ( isset( $_POST[ 'photo_cp_signup_service_url' ] ) ) ? esc_url_raw( wp_unslash( $_POST[ 'photo_cp_signup_service_url' ] ) ): '';
 		$service_key = ( isset( $_POST[ 'photo_cp_signup_service_key' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'photo_cp_signup_service_key' ] ) ) : '';
 		$service_source = ( isset( $_POST[ 'photo_cp_signup_service_source' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'photo_cp_signup_service_source' ] ) ) : '';
-		$form_ids = ( isset( $_POST[ 'form_ids' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'form_ids' ] ) ) : '';
 
 		update_site_option( 'photo_cp_signup_service_url', $service_url );
 		update_site_option( 'photo_cp_signup_service_key', $service_key );
 		update_site_option( 'photo_cp_signup_service_source', $service_source );
-		update_site_option( 'form_ids', $form_ids );
 		
 		$settings_saved = true;
 	}
@@ -88,23 +86,15 @@ function photo_cp_signup_admin_form() {
 					<th scope="row">Service Source</th>
 					<td><input type="text" name="photo_cp_signup_service_source" value="<?php echo esc_attr( wp_unslash( get_site_option( 'photo_cp_signup_service_source' ) ) ); ?>" /></td>
 				</tr>
-				<tr valign="top">
-					<th scope="row">Form ID</th>
-					<td><input type="text" name="form_ids" value="<?php echo esc_attr( wp_unslash( get_site_option( 'form_ids' ) ) ); ?>" /></td>
-				</tr>
 			</table>
 
 			<?php submit_button(); ?>
 		</form>
 	</div>
-	<?php
+
+
+<?php
 }
-
-
-
-
-
-
 
 //Admin Menu for form
 function photo_cp_signup_add_admin_menu() {
