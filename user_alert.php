@@ -56,17 +56,6 @@ class karenPlugin {
     }
 }
 
-//wp_new_user_notification( int $user_id, null $deprecated = null, string $notify = '' );
-
-// function my_function($user_id){
-//     //do your stuff
-//     echo "I really wish this would print somewhere";
-//     echo '<div class="notice notice-warning is-dismissible">
-//              <p>Please I beg you.</p>
-//          </div>';
-// }
-// add_action('user_register','my_function');
-
 
 
 if (class_exists('karenPlugin')) {
@@ -87,34 +76,14 @@ function user_registeration( $user_id ) {
     $my_file = 'exportedfile.txt';
     $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); //implicitly creates file
 
-    // $myObj->first_name = $_POST['first_name'];
-    // $myObj->last_name = $_POST['last_name'];
-    // $myObj->username = $_POST['user_login'];
-    // $myObj->password = $_POST['pwd'];
-    // $myObj->email_address = $_POST['email'];
-    // $myJSON = json_encode($myObj);
-    // file_put_contents($my_file, $myJSON);
+
 
     $user = new WP_User($user_id); // getting user from database by #ID
     $myObj->email_address = $user->user_email; 
     $myObj->nickname = $user->user_nicename;
     $myObj->dispalyName = $user->display_name;
 
-    // $sql = " SELECT user_id,meta_key,meta_value
-    // FROM {$wpdb->usermeta} 
-    // WHERE ({$wpdb->usermeta}.meta_key = 'first_name' OR {$wpdb->usermeta}.meta_key = 'last_name')";
-    // $ansatte = $wpdb->get_results($sql);
-    // var_dump($sql);
-    // $users = array();
-    // foreach ($ansatte as $a) {
-    //   $users[$a->user_id][$a->meta_key] = $a->meta_value;
-    // }
-    // var_dump($users);
 
-    // foreach ($users as $u) {
-    //     $foo =  $u['first_name'].' '.$u['last_name'];
-    //     file_put_contents($my_file, $foo);
-    // }
 
     $myObj->first_name = get_user_meta( $user_id, 'first_name', true );
     $myObj->last_name = get_user_meta( $user_id, 'last_name', true );
@@ -123,22 +92,6 @@ function user_registeration( $user_id ) {
 }
 add_action( 'user_register', 'user_registeration', 10, 1 );
 
-// function wp_mail( $to, $subject, $message, $headers = '' ) {
-//     if( $headers == '' ) {
-//       $headers = "MIME-Version: 1.0\n" .
-//         "From: " . get_settings('admin_email') . "\n" . 
-//         "Content-Type: text/plain; charset=\"" . get_settings('blog_charset') . "\"\n";
-//     }
-  
-//     return @mail( $to, $subject, $message, $headers );
-// }
-
-// I guess echoing just doesn't work
-// outside stand-alone function
-// function customFunction($arg) {
-//     echo $arg;
-// }
-// customFunction("Echo this out bitch");
 
 // activation
 register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array will access the funciton in the class
