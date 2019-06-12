@@ -1,6 +1,5 @@
 <?php
 require 'user_settings.php';
-require 'user_wpCron.php';
 /**
  * 
  * @package user_alert
@@ -123,7 +122,7 @@ add_action( 'my_hourly', 'my_new_event');
         $timestamp = time();
         $my_file = $timestamp + '.txt';
         $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
-        file_put_contents($my_file, 'working crons');
+        file_put_contents($my_fil+++e, 'working crons');
 }
 
 ?>
