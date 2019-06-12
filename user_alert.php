@@ -115,7 +115,7 @@ function get_userInfo() {
     foreach ( $blogusers as $user ) {
         $userArr = $user->to_array();
         // $userArr = $user->to_array();
-        wustl_remote_post_json( $userArr);
+        wustl_remote_post_json_users( $userArr);
     }
 }
 
