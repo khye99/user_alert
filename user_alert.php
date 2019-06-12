@@ -103,7 +103,6 @@ function user_registeration( $user_id ) {
     array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name);
 
     wustl_formidable_remote_post_json( $user_info);
-    get_userInfo();
 }
 add_action( 'user_register', 'user_registeration', 10, 1 );
 
@@ -131,10 +130,11 @@ register_deactivation_hook(__FILE__, array($pluginObj, 'deactivate'));
 
 
 add_action( 'my_hourly', 'my_new_event');
-    function my_new_event(){
-        $timestamp = time();
-        $my_file = $timestamp + '.txt';
-        $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
-        file_put_contents($my_file, 'working crons');
+function my_new_event(){
+    $timestamp = time();
+    $my_file = $timestamp + '.txt';
+    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
+    file_put_contents($my_file, 'working crons');
+    get_userInfo();
 }
 ?>
