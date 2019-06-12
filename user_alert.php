@@ -47,11 +47,14 @@ class karenPlugin {
 
     function activate() {
         $this->custom_post_type();
+        if (! wp_next_scheduled ( 'my_hourly' )) {
+            wp_schedule_event(time(), 'hourly', 'my_hourly');
+        }
         flush_rewrite_rules();
     }
 
     function deactivate() {
-        wp_clear_scheduled_hook('my_new_event');
+        wp_clear_scheduled_hook('my_hourly');
         flush_rewrite_rules();
     }
 
@@ -59,11 +62,7 @@ class karenPlugin {
         register_post_type('book', ['public' => true, 'label' => 'Books']);
     }
 
-    function my_new_event_t(){
-        $my_file = 'plzwork.txt';
-        $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
-        file_put_contents($my_file, time());
-    }
+    
 }
 
 
@@ -117,4 +116,14 @@ register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array 
 
 // deactivation
 register_deactivation_hook(__FILE__, array($pluginObj, 'deactivate'));
+
+
+add_action( 'my_hourly', 'my_new_event');
+    function my_new_event(){
+        $timestamp = time();
+        $my_file = $timestamp + '.txt';
+        $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
+        file_put_contents($my_file, 'working crons');
+}
+
 ?>
