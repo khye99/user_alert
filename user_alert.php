@@ -74,12 +74,9 @@ function general_admin_notice(){
 add_action('admin_notices', 'general_admin_notice');
 
 function user_registeration( $user_id ) {
-    $my_file = 'exportedfile.txt';
-    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); //implicitly creates fil
-
-    $user_info = []; 
-
-    $user = new WP_User($user_id); // getting user from database by #ID
+    // $my_file = 'exportedfile.txt';
+    // $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); //implicitly creates fil
+    //$user = new WP_User($user_id); // getting user from database by #ID
     // $myObj->email_address = $user->user_email; 
     // $myObj->nickname = $user->user_nicename;
     // $myObj->dispalyName = $user->display_name;
@@ -87,7 +84,15 @@ function user_registeration( $user_id ) {
     // $myObj->last_name = get_user_meta( $user_id, 'last_name', true );
     // $myJSON = json_encode($myObj);
     //file_put_contents($my_file, $myJSON);
+    get_user_JSON( $user_info);
+}
+add_action( 'user_register', 'user_registeration', 10, 1 );
 
+
+function get_user_JSON( $user_id ) {
+    $user_info = []; 
+
+    $user = new WP_User($user_id);
     $email_address = $user->user_email;
     $user_name = $user->user_nicename;
     $full_name = $user->display_name;
@@ -95,10 +100,49 @@ function user_registeration( $user_id ) {
     $last_name = get_user_meta( $user_id, 'last_name', true );
     array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name);
 
+    // call function to generate JSON object passing in array with user info
     wustl_formidable_remote_post_json( $user_info);
-}
-add_action( 'user_register', 'user_registeration', 10, 1 );
 
+    get_userInfo();
+}
+
+function get_userInfo() {
+    // $args = array(
+    //     'blog_id'      => $GLOBALS['blog_id'],
+    //     'role'         => '',
+    //     'role__in'     => array(),
+    //     'role__not_in' => array(),
+    //     'meta_key'     => '',
+    //     'meta_value'   => '',
+    //     'meta_compare' => '',
+    //     'meta_query'   => array(),
+    //     'date_query'   => array(),        
+    //     'include'      => array(),
+    //     'exclude'      => array(),
+    //     'orderby'      => 'login',
+    //     'order'        => 'ASC',
+    //     'offset'       => '',
+    //     'search'       => '',
+    //     'number'       => '',
+    //     'count_total'  => false,
+    //     'fields'       => 'all',
+    //     'who'          => '',
+    //  ); 
+    $my_file = 'exportedfile.txt';
+    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); //implicitly creates fil
+
+    $users = get_users( array( 'fields' => array( 'ID' ) ) );
+    foreach($users as $user_id){
+        file_put_contents($my_file, get_user_meta($user_id->ID));
+    }
+
+    // $blogusers = get_users('blog_id=1&orderby=nicename&role=subscriber' );
+    // // Array of WP_User objects.
+    // foreach ( $blogusers as $user ) {
+    //     wustl_formidable_remote_post_json($user);
+    //     file_put_contents($my_file, $user);
+    //}
+}
 
 // activation
 register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array will access the funciton in the class
