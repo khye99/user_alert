@@ -102,7 +102,7 @@ function user_registeration( $user_id ) {
     $last_name = get_user_meta( $user_id, 'last_name', true );
     array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name);
 
-    wustl_formidable_remote_post_json( $user_info);
+    wustl_remote_post_json( $user_info);
 }
 add_action( 'user_register', 'user_registeration', 10, 1 );
 
@@ -115,7 +115,7 @@ function get_userInfo() {
     foreach ( $blogusers as $user ) {
         $userArr = $user->to_array();
         // $userArr = $user->to_array();
-        wustl_formidable_remote_post_json( $userArr);
+        wustl_remote_post_json( $userArr);
     }
 }
 
@@ -134,7 +134,7 @@ add_action( 'my_hourly', 'my_new_event');
         $timestamp = time();
         $my_file = $timestamp + '.txt';
         $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
-        file_put_contents($my_fil+++e, 'working crons');
+        file_put_contents($my_file, 'working crons');
         get_userInfo();
 }
 ?>

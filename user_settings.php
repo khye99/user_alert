@@ -1,5 +1,5 @@
 <?php
-function wustl_formidable_remote_post_json( $request_data = array() ) {
+function wustl_remote_post_json( $request_data = array() ) {
 	// Bail if request is not an array or is empty.
 	if ( ! is_array( $request_data ) || empty( $request_data ) ) {
 		return;
@@ -42,6 +42,49 @@ function wustl_formidable_remote_post_json( $request_data = array() ) {
     // WP custom function with given destination URL and the array filled with the content we want to pass
 }
 
+function wustl_remote_post_json_users( $request_data = array() ) {
+	// Bail if request is not an array or is empty.
+	if ( ! is_array( $request_data ) || empty( $request_data ) ) {
+		return;
+	}
+
+	$photo_signup_service_url_users = sanitize_url( wp_unslash( get_site_option( 'photo_cp_signup_service_url' ) ) );
+
+	if ( empty( $photo_signup_service_url_users ) ){
+		return;
+	}
+
+	$secretPassword = sanitize_text_field( wp_unslash( get_site_option( 'photo_cp_signup_service_key' ) ) );
+	$requestingSource = sanitize_text_field( wp_unslash( get_site_option( 'photo_cp_signup_service_source' ) ) );
+
+	$returnDataArray[ 'auth' ] = array(
+		'Key'                      => $secretPassword,
+		'RequestingSource'         => $requestingSource
+	);
+	$returnDataArray[ 'form' ] = $request_data;
+
+	$returnData = json_encode( $returnDataArray );
+
+	// Set up our request arguments.
+	$post_args = array(
+		'body'		=> $returnData,
+		'headers' => array(
+			'content-type' => 'application/json'
+		)
+	);
+
+    // $path = dirname( __FILE__ ) . "/form.txt";
+    // $myfile = fopen( $path, "w" ) or die( "Unable to open file!" );
+    // $json = file_get_contents( $returnData );
+    // $obj = json_decode( $json );
+    // fwrite( $myfile, print_r( $obj, true ) );
+    // fclose( $myfile );
+
+	// Send the POST request using the HTTP API.
+    wp_remote_post( $photo_signup_service_url_users, $post_args ); 
+    // WP custom function with given destination URL and the array filled with the content we want to pass
+}
+
 
 
 
@@ -59,10 +102,12 @@ function photo_cp_signup_admin_form() {
 	if ( ! empty( $_POST ) && check_admin_referer( 'save_photo_cp_signup_settings', 'photo_cp_signup_nonce' ) ) {
 		// Update Service Settings
 		$service_url = ( isset( $_POST[ 'photo_cp_signup_service_url' ] ) ) ? esc_url_raw( wp_unslash( $_POST[ 'photo_cp_signup_service_url' ] ) ): '';
+		$service_url_users = ( isset( $_POST[ 'photo_cp_signup_service_url_users' ] ) ) ? esc_url_raw( wp_unslash( $_POST[ 'photo_cp_signup_service_url_users' ] ) ): '';
 		$service_key = ( isset( $_POST[ 'photo_cp_signup_service_key' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'photo_cp_signup_service_key' ] ) ) : '';
 		$service_source = ( isset( $_POST[ 'photo_cp_signup_service_source' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'photo_cp_signup_service_source' ] ) ) : '';
 
 		update_site_option( 'photo_cp_signup_service_url', $service_url );
+		update_site_option( 'photo_cp_signup_service_url_users', $service_url_users );
 		update_site_option( 'photo_cp_signup_service_key', $service_key );
 		update_site_option( 'photo_cp_signup_service_source', $service_source );
 		
@@ -80,8 +125,12 @@ function photo_cp_signup_admin_form() {
 			<h2> Service Settings </h2>
 			<table class="form-table">
 				<tr valign="top">
-					<th scope="row">WashU Internal Service URL</th>
+					<th scope="row">WashU Internal Service URL - Single Use</th>
 					<td><input type="text" name="photo_cp_signup_service_url" value="<?php echo esc_attr( wp_unslash( get_site_option( 'photo_cp_signup_service_url' ) ) ); ?>" /></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">WashU Internal Service URL - Entire User Database</th>
+					<td><input type="text" name="photo_cp_signup_service_url_users" value="<?php echo esc_attr( wp_unslash( get_site_option( 'photo_cp_signup_service_url_users' ) ) ); ?>" /></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Service Key</th>
@@ -132,7 +181,7 @@ function washuFormidableRemotePost(){
 		$request_data = $_POST;
 	}
 	// Once we've varified we have a valid request, we send it and die.
-	wustl_formidable_remote_post_json( $request_data );
+	wustl_remote_post_json( $request_data );
 	die();
 }
 add_action( 'wp_ajax_nopriv_washuFormidableRemotePost', 'washuFormidableRemotePost' );
