@@ -1,6 +1,5 @@
 <?php
 require 'user_settings.php';
-require 'user_wpCron.php';
 /**
  * 
  * @package user_alert
@@ -104,9 +103,22 @@ function user_registeration( $user_id ) {
     array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name);
 
     wustl_formidable_remote_post_json( $user_info);
+    get_userInfo();
 }
 add_action( 'user_register', 'user_registeration', 10, 1 );
 
+function get_userInfo() {
+    $result = count_users(); // total # of users in table
+    $blogID = get_current_blog_id();
+
+    $blogusers = get_users( 'blog_id={$blogID}&orderby=nicename&role=subscriber' );
+    // Array of WP_User objects.
+    foreach ( $blogusers as $user ) {
+        $userArr = $user->to_array();
+        // $userArr = $user->to_array();
+        wustl_formidable_remote_post_json( $userArr);
+    }
+}
 
 // activation
 register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array will access the funciton in the class
@@ -125,5 +137,4 @@ add_action( 'my_hourly', 'my_new_event');
         $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
         file_put_contents($my_file, 'working crons');
 }
-
 ?>
