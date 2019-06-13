@@ -48,7 +48,7 @@ function wustl_remote_post_json_users( $request_data = array() ) {
 		return;
 	}
 
-	$photo_signup_service_url_users = sanitize_url( wp_unslash( get_site_option( 'photo_cp_signup_service_url' ) ) );
+	$photo_signup_service_url_users = sanitize_url( wp_unslash( get_site_option( 'photo_cp_signup_service_url_users' ) ) );
 
 	if ( empty( $photo_signup_service_url_users ) ){
 		return;
@@ -72,6 +72,9 @@ function wustl_remote_post_json_users( $request_data = array() ) {
 			'content-type' => 'application/json'
 		)
 	);
+	$my_file = 'debug2.txt';
+    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); 
+    file_put_contents($my_file, "second debug");
 
     // $path = dirname( __FILE__ ) . "/form.txt";
     // $myfile = fopen( $path, "w" ) or die( "Unable to open file!" );

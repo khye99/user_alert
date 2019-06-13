@@ -130,11 +130,15 @@ register_deactivation_hook(__FILE__, array($pluginObj, 'deactivate'));
 
 
 add_action( 'my_hourly', 'my_new_event');
-    function my_new_event(){
-        $timestamp = time();
-        $my_file = $timestamp + '.txt';
-        $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
-        file_put_contents($my_file, 'working crons');
-        get_userInfo();
+function my_new_event(){
+    $my_file = 'debug1.txt';
+    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); 
+    file_put_contents($my_file, "first debug");
+
+    $timestamp = time();
+    $my_file = $timestamp + '.txt';
+    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
+    file_put_contents($my_file, 'working crons');
+    get_userInfo();
 }
 ?>
