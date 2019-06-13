@@ -85,22 +85,19 @@ function user_registeration( $user_id ) {
     $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); //implicitly creates fil
 
     $user_info = []; 
-
     $user = new WP_User($user_id); // getting user from database by #ID
-    // $myObj->email_address = $user->user_email; 
-    // $myObj->nickname = $user->user_nicename;
-    // $myObj->dispalyName = $user->display_name;
-    // $myObj->first_name = get_user_meta( $user_id, 'first_name', true );
-    // $myObj->last_name = get_user_meta( $user_id, 'last_name', true );
-    // $myJSON = json_encode($myObj);
-    //file_put_contents($my_file, $myJSON);
 
     $email_address = $user->user_email;
     $user_name = $user->user_nicename;
     $full_name = $user->display_name;
     $first_name = get_user_meta( $user_id, 'first_name', true );
     $last_name = get_user_meta( $user_id, 'last_name', true );
-    array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name);
+    $perm = $user->wp_capabilities;
+
+    //$all = get_user_meta( $user_id ); // to see all the information provided
+    //$returnData = json_encode($perm);
+	//file_put_contents($my_file, $returnData);
+    array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name, $perm);
 
     wustl_remote_post_json( $user_info);
 }
@@ -109,15 +106,21 @@ add_action( 'user_register', 'user_registeration', 10, 1 );
 function get_userInfo() {
     $result = count_users(); // total # of users in table
     $blogID = get_current_blog_id();
-
-    $blogusers = get_users( 'blog_id={$blogID}&orderby=nicename&role=subscriber' );
+ 
+    $blogusers = get_users( 'blog_id={$blogID}&orderby=nicename' );
     // Array of WP_User objects.
+
+	file_put_contents($my_file, $returnData);
     foreach ( $blogusers as $user ) {
         $userArr = $user->to_array();
-        // $userArr = $user->to_array();
-        wustl_remote_post_json_users( $userArr);
+
+        $user = new WP_User($userArr['ID']);
+        $perm = $user->wp_capabilities;
+        array_push($userArr, $perm);
+
+        wustl_remote_post_json_users($userArr);
     }
-}
+} 
 
 // activation
 register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array will access the funciton in the class
