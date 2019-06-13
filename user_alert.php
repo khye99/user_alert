@@ -34,7 +34,7 @@ Copyright 2005-2019 Automattic, Inc.
 */ 
 
 /*
-Copy this to debug:
+Copy this to debug: 
 $my_file = 'testing_again.txt';
 $handle = fopen($my_file, 'w') or die('Cannot open file: ' .$my_file);
 file_put_contents($my_file, "debug");
