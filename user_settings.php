@@ -30,10 +30,6 @@ function wustl_remote_post_json( $request_data = array() ) {
 		)
 	);
 
-	// $my_file = 'testing_again.txt';
-	// $handle = fopen($my_file, 'w') or die('Cannot open file: ' .$my_file);
-	// file_put_contents($my_file, $returnData);
-
 	// Send the POST request using the HTTP API.
     wp_remote_post( $photo_signup_service_url, $post_args ); 
     // WP custom function with given destination URL and the array filled with the content we want to pass

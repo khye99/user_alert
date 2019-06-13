@@ -33,9 +33,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Copyright 2005-2019 Automattic, Inc.
 */ 
 
-// You search for a built in method in wordpress, if those things are not defined or be reached, 
-// something is catchy and fishy yo
-// The following options all do the same thing, to secure the plugin
+/*
+Copy this to debug:
+$my_file = 'testing_again.txt';
+$handle = fopen($my_file, 'w') or die('Cannot open file: ' .$my_file);
+file_put_contents($my_file, "debug");
+*/
 
 defined ('ABSPATH') or die('Access file denied.');
 
@@ -141,3 +144,4 @@ function my_new_event(){
     get_userInfo();
 }
 ?>
+
