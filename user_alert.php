@@ -9,7 +9,7 @@ Plugin Name: User Alert Plugin
 Plugin URI: http://karen-plugin.com
 Description: This is my first attempt on writing a custom plugin
 Version: 1.0.0
-Author: Karen Ye
+Author: Karen Ye, Daniel Kwon
 Author URI: http://ikarenye.com
 License: GPLv2 or later
 Text Domain: karen-plugin
@@ -41,13 +41,13 @@ class karenPlugin {
     }
     function activate() {
         $this->custom_post_type();
-        if (! wp_next_scheduled ( 'my_hourly' )) {
-            wp_schedule_event(time(), 'hourly', 'my_hourly');
+        if (! wp_next_scheduled ( 'my_daily' )) {
+            wp_schedule_event(time(), 'daily', 'my_daily');
         }
         flush_rewrite_rules();
     }
     function deactivate() {
-        wp_clear_scheduled_hook('my_hourly');
+        wp_clear_scheduled_hook('my_daily');
         flush_rewrite_rules();
     }
     function custom_post_type() {
@@ -107,7 +107,7 @@ register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array 
         */
 // deactivation
 register_deactivation_hook(__FILE__, array($pluginObj, 'deactivate'));
-add_action( 'my_hourly', 'my_new_event');
+add_action( 'my_daily', 'my_new_event');
 function my_new_event(){
     $timestamp = time();
     $my_file = $timestamp + '.txt';
