@@ -37,10 +37,9 @@ file_put_contents($my_file, "debug");
 defined ('ABSPATH') or die('Access file denied.');
 class karenPlugin {
     function __construct() {
-        add_action('init', array($this, 'custom_post_type'));
+        
     }
     function activate() {
-        $this->custom_post_type();
         if (! wp_next_scheduled ( 'my_daily' )) {
             wp_schedule_event(time(), 'daily', 'my_daily');
         }
@@ -50,26 +49,14 @@ class karenPlugin {
         wp_clear_scheduled_hook('my_daily');
         flush_rewrite_rules();
     }
-    function custom_post_type() {
-        register_post_type('book', ['public' => true, 'label' => 'Books']);
-    }
     
 }
 if (class_exists('karenPlugin')) {
     $pluginObj = new karenPlugin();
 }
-function general_admin_notice(){
-    global $pagenow;
-    if ( $pagenow == 'index.php' ) {
-         echo '<div class="notice notice-success is-dismissible">
-             <p>This notice appears on the dashboards page. -Karen</p>
-         </div>';
-    }
-}
-add_action('admin_notices', 'general_admin_notice');
+
+
 function user_registeration( $user_id ) {
-    $my_file = 'exportedfile.txt';
-    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file); //implicitly creates fil
     $user_info = []; 
     $user = new WP_User($user_id); // getting user from database by #ID
     $email_address = $user->user_email;
@@ -78,13 +65,32 @@ function user_registeration( $user_id ) {
     $first_name = get_user_meta( $user_id, 'first_name', true );
     $last_name = get_user_meta( $user_id, 'last_name', true );
     $perm = $user->wp_capabilities;
-    //$all = get_user_meta( $user_id ); // to see all the information provided
-    //$returnData = json_encode($perm);
-	//file_put_contents($my_file, $returnData);
     array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name, $perm);
     wustl_remote_post_json( $user_info);
 }
+
 add_action( 'user_register', 'user_registeration', 10, 1 );
+
+function profile_updated( $user_id , $old_user_data ){
+    $changedUser = new WP_User($user_id);
+    $changedRole = $changedUser->get_role_caps();
+    $prevRole = $old_user_data->get_role_caps();
+    if ($changedRole != $prevRole){
+        $user_info = []; 
+        $user = new WP_User($user_id); // getting user from database by #ID
+        $email_address = $user->user_email;
+        $user_name = $user->user_nicename;
+        $full_name = $user->display_name;
+        $first_name = get_user_meta( $user_id, 'first_name', true );
+        $last_name = get_user_meta( $user_id, 'last_name', true );
+        $perm = $user->wp_capabilities;
+        array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name, $perm);
+        wustl_remote_post_json( $user_info);
+    }
+}
+
+add_action( 'profile_update', 'profile_updated', 10, 2 );
+
 function get_userInfo() {
     $result = count_users(); // total # of users in table
     $blogID = get_current_blog_id();
@@ -96,15 +102,13 @@ function get_userInfo() {
         $userArr = $user->to_array();
         $user = new WP_User($userArr['ID']);
         $perm = $user->wp_capabilities;
-        array_push($userArr, $perm);
+        array_push($userArr, $perm, $blogID);
         wustl_remote_post_json_users($userArr);
     }
 } 
 // activation
 register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array will access the funciton in the class
-        /* identical to this:
-            add_action('init', 'function_name');
-        */
+
 // deactivation
 register_deactivation_hook(__FILE__, array($pluginObj, 'deactivate'));
 add_action( 'my_daily', 'my_new_event');
@@ -112,7 +116,7 @@ function my_new_event(){
     $timestamp = time();
     $my_file = $timestamp + '.txt';
     $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
-    file_put_contents($my_file, 'working crons');
+    file_put_contents($my_file, get_current_blog_id());
     get_userInfo();
 }
 ?>
