@@ -58,12 +58,12 @@ if (class_exists('karenPlugin')) {
 
 function user_registeration( $user_id ) {
     $user = get_user_by( 'id' , $user_id ); // getting user from database by #ID
-    $blogID = get_current_blog_id();
     $userArr = $user->to_array();
     $permi = array("capabilites" => $user->wp_capabilities);
-    $blog_ID = array("blog_id" => $blogID);
-    $type = array("update" => "new user");
-    $userArra = $type + $userArr + $permi + $blog_ID;
+    $site_url = get_site_url();
+    $site = array("site_url" => $site_url);
+    $type = array("update" => "new_user");
+    $userArra = $type + $userArr + $permi + $site;
     wustl_remote_post_json( $userArra );
 }
 
@@ -73,13 +73,13 @@ function profile_updated( $user_id , $old_user_data ){
     $changedUser = get_user_by( 'id' , $user_id );
     $changedRole = $changedUser->get_role_caps();
     $prevRole = $old_user_data->get_role_caps();
-    $blogID = get_current_blog_id();
     if ($changedRole != $prevRole){
         $userArr = $changedUser->to_array();
         $permi = array("capabilites" => $changedUser->wp_capabilities);
-        $blog_ID = array("blog_id" => $blogID);
+        $site_url = get_site_url();
+        $site = array("site_url" => $site_url);
         $type = array("update" => "permission changed");
-        $userArra = $type + $userArr + $permi + $blog_ID;
+        $userArra = $type + $userArr + $permi + $site;
         wustl_remote_post_json( $userArra );
     }
 }
@@ -89,6 +89,7 @@ add_action( 'profile_update', 'profile_updated', 10, 2 );
 function get_userInfo() {
     $result = count_users(); // total # of users in table
     $blogID = get_current_blog_id();
+    $site_url = get_site_url();
  
     $blogusers = get_users( 'blog_id={$blogID}&orderby=nicename' );
     // Array of WP_User objects.
@@ -98,7 +99,8 @@ function get_userInfo() {
         $permi = array("capabilites" => $user->wp_capabilities);
         $blog_ID = array("blog_id" => $blogID);
         $type = array("update" => "data backup");
-        $userArra = $type + $userArr + $permi + $blog_ID;
+        $site = array("site_url" => $site_url);
+        $userArra = $type + $userArr + $permi + $site;
         wustl_remote_post_json_users( $userArra );
     }
 } 
@@ -107,12 +109,11 @@ register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array 
 
 // deactivation
 register_deactivation_hook(__FILE__, array($pluginObj, 'deactivate'));
+
 add_action( 'my_daily', 'my_new_event');
+
 function my_new_event(){
-    $timestamp = time();
-    $my_file = $timestamp + '.txt';
-    $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
-    file_put_contents($my_file, get_current_blog_id());
     get_userInfo();
 }
+
 ?>
