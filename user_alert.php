@@ -102,6 +102,19 @@ function get_userInfo() {
         wustl_remote_post_json_users( $userArra );
     }
 } 
+
+function deleteUser($user_id) {
+    $user = get_user_by( 'id' , $user_id );
+    $userArr = $user->to_array();
+    $permi = array("capabilites" => $user->wp_capabilities);
+    $type = array("update" => "deletion");
+    $site_url = get_site_url();
+    $site = array("site_url" => $site_url);
+    $userArra = $type + $userArr + $permi + $site;
+    wustl_remote_post_json( $userArra );
+ }
+ add_action( 'delete_user', 'deleteUser', 10, 3);
+
 // activation
 register_activation_hook(__FILE__, array($pluginObj, 'activate'));// this array will access the funciton in the class
 
