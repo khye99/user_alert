@@ -27,6 +27,7 @@ function wustl_remote_post_json( $request_data = array() ) {
     wp_remote_post( $photo_signup_service_url, $post_args ); 
     // WP custom function with given destination URL and the array filled with the content we want to pass
 }
+
 function wustl_remote_post_json_users( $request_data = array() ) {
 	// Bail if request is not an array or is empty.
 	if ( ! is_array( $request_data ) || empty( $request_data ) ) {
