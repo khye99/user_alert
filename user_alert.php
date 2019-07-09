@@ -101,9 +101,10 @@ function get_userInfo() {
     foreach ( $blogusers as $user ) {
         $userArr = $user->to_array();
         $user = new WP_User($userArr['ID']);
-        $perm = $user->wp_capabilities;
-        array_push($userArr, $perm, $blogID);
-        wustl_remote_post_json_users($userArr);
+        $permi = array("capabilites" => $user->wp_capabilities);
+        $blog_ID = array("blog_id" => $blogID);
+        $userArra = $userArr + $permi + $blog_ID;
+        wustl_remote_post_json_users($userArra);
     }
 } 
 // activation
