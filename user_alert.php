@@ -57,35 +57,28 @@ if (class_exists('karenPlugin')) {
 
 
 function user_registeration( $user_id ) {
-    $user_info = []; 
-    $user = new WP_User($user_id); // getting user from database by #ID
-    $email_address = $user->user_email;
-    $user_name = $user->user_nicename;
-    $full_name = $user->display_name;
-    $first_name = get_user_meta( $user_id, 'first_name', true );
-    $last_name = get_user_meta( $user_id, 'last_name', true );
-    $perm = $user->wp_capabilities;
-    array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name, $perm);
-    wustl_remote_post_json( $user_info);
+    $user = get_user_by( 'id' , $user_id ); // getting user from database by #ID
+    $blogID = get_current_blog_id();
+    $userArr = $user->to_array();
+    $permi = array("capabilites" => $user->wp_capabilities);
+    $blog_ID = array("blog_id" => $blogID);
+    $userArra = $userArr + $permi + $blog_ID;
+    wustl_remote_post_json( $userArra );
 }
 
 add_action( 'user_register', 'user_registeration', 10, 1 );
 
 function profile_updated( $user_id , $old_user_data ){
-    $changedUser = new WP_User($user_id);
+    $changedUser = get_user_by( 'id' , $user_id );
     $changedRole = $changedUser->get_role_caps();
     $prevRole = $old_user_data->get_role_caps();
+    $blogID = get_current_blog_id();
     if ($changedRole != $prevRole){
-        $user_info = []; 
-        $user = new WP_User($user_id); // getting user from database by #ID
-        $email_address = $user->user_email;
-        $user_name = $user->user_nicename;
-        $full_name = $user->display_name;
-        $first_name = get_user_meta( $user_id, 'first_name', true );
-        $last_name = get_user_meta( $user_id, 'last_name', true );
-        $perm = $user->wp_capabilities;
-        array_push($user_info, $email_address, $user_name, $full_name, $first_name, $last_name, $perm);
-        wustl_remote_post_json( $user_info);
+        $userArr = $changedUser->to_array();
+        $permi = array("capabilites" => $changedUser->wp_capabilities);
+        $blog_ID = array("blog_id" => $blogID);
+        $userArra = $userArr + $permi + $blog_ID;
+        wustl_remote_post_json( $userArra );
     }
 }
 
@@ -100,11 +93,10 @@ function get_userInfo() {
 	file_put_contents($my_file, $returnData);
     foreach ( $blogusers as $user ) {
         $userArr = $user->to_array();
-        $user = new WP_User($userArr['ID']);
         $permi = array("capabilites" => $user->wp_capabilities);
         $blog_ID = array("blog_id" => $blogID);
         $userArra = $userArr + $permi + $blog_ID;
-        wustl_remote_post_json_users($userArra);
+        wustl_remote_post_json_users( $userArra );
     }
 } 
 // activation
