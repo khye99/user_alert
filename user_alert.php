@@ -62,7 +62,8 @@ function user_registeration( $user_id ) {
     $userArr = $user->to_array();
     $permi = array("capabilites" => $user->wp_capabilities);
     $blog_ID = array("blog_id" => $blogID);
-    $userArra = $userArr + $permi + $blog_ID;
+    $type = array("update" => "new user");
+    $userArra = $type + $userArr + $permi + $blog_ID;
     wustl_remote_post_json( $userArra );
 }
 
@@ -77,7 +78,8 @@ function profile_updated( $user_id , $old_user_data ){
         $userArr = $changedUser->to_array();
         $permi = array("capabilites" => $changedUser->wp_capabilities);
         $blog_ID = array("blog_id" => $blogID);
-        $userArra = $userArr + $permi + $blog_ID;
+        $type = array("update" => "permission changed");
+        $userArra = $type + $userArr + $permi + $blog_ID;
         wustl_remote_post_json( $userArra );
     }
 }
@@ -95,7 +97,8 @@ function get_userInfo() {
         $userArr = $user->to_array();
         $permi = array("capabilites" => $user->wp_capabilities);
         $blog_ID = array("blog_id" => $blogID);
-        $userArra = $userArr + $permi + $blog_ID;
+        $type = array("update" => "data backup");
+        $userArra = $type + $userArr + $permi + $blog_ID;
         wustl_remote_post_json_users( $userArra );
     }
 } 
