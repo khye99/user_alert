@@ -73,10 +73,10 @@ function profile_updated( $user_id , $old_user_data ){
     $changedUser = get_user_by( 'id' , $user_id );
     $changedRole = $changedUser->get_role_caps();
     $prevRole = $old_user_data->get_role_caps();
+    $site_url = get_site_url();
     if ($changedRole != $prevRole){
         $userArr = $changedUser->to_array();
         $permi = array("capabilites" => $changedUser->wp_capabilities);
-        $site_url = get_site_url();
         $site = array("site_url" => $site_url);
         $type = array("update" => "permission changed");
         $userArra = $type + $userArr + $permi + $site;
@@ -88,7 +88,6 @@ add_action( 'profile_update', 'profile_updated', 10, 2 );
 
 function get_userInfo() {
     $result = count_users(); // total # of users in table
-    $blogID = get_current_blog_id();
     $site_url = get_site_url();
  
     $blogusers = get_users( 'blog_id={$blogID}&orderby=nicename' );
@@ -97,7 +96,6 @@ function get_userInfo() {
     foreach ( $blogusers as $user ) {
         $userArr = $user->to_array();
         $permi = array("capabilites" => $user->wp_capabilities);
-        $blog_ID = array("blog_id" => $blogID);
         $type = array("update" => "data backup");
         $site = array("site_url" => $site_url);
         $userArra = $type + $userArr + $permi + $site;
