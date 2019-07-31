@@ -121,11 +121,6 @@ function photo_cp_signup_add_admin_menu() {
 	);
 }
 add_action( 'admin_menu', 'photo_cp_signup_add_admin_menu' );
-// Enqueue scripts
-function wustl_cp_signup_add_plugin_scripts() {
-        wp_enqueue_script( 'my_amazing_script', plugins_url( 'my_amazing_script.js', __FILE__ ), 'jquery', "1.0.0", true );
-}
-add_action( 'wp_enqueue_scripts', 'wustl_cp_signup_add_plugin_scripts' );
 function washuFormidableRemotePost(){
 	if ( ! $_POST ) {
 		return;
@@ -138,13 +133,4 @@ function washuFormidableRemotePost(){
 }
 add_action( 'wp_ajax_nopriv_washuFormidableRemotePost', 'washuFormidableRemotePost' );
 add_action( 'wp_ajax_washuFormidableRemotePost', 'washuFormidableRemotePost' );
-// function formIdCheck() {
-//     $my_file = 'plzwork.txt';
-//     $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
-//     file_put_contents($my_file, "plz plz work gosh");
-//  	$formIDsArray = explode( ",", str_replace( ' ', '', get_site_option( 'form_ids' ) ) );
-// 	//wp_localize_script( 'user_script', 'formIDsArray');
-//     wp_enqueue_script('pw-script', plugin_dir_url( __FILE__ ) . 'user_script.js');
-// }
-// add_action( 'wp_enqueue_scripts', 'formIdCheck' );
 ?>
